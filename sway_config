@@ -1,0 +1,49 @@
+include /etc/sway/config
+
+input type:keyboard {
+  # Capslock key should work as escape key
+  # See /usr/share/X11/xkb/rules/xorg.lst for options
+  xkb_options caps:escape
+
+  repeat_delay 250
+  repeat_rate 45
+}
+
+input * xkb_layout "pl"
+
+input 2:7:SynPS/2_Synaptics_TouchPad {
+    tap enabled
+}
+
+# Notification Daemon
+exec swaync
+
+# Toggle control center
+bindsym $mod+Shift+n exec swaync-client -t -sw
+
+bindsym $mod+End exec swaylock -i $lock_bg
+
+exec swayidle -w \
+         timeout 300 'swaylock -f -c 000000 -i $lock_bg' \
+         timeout 600 'swaymsg "output * dpms off"' \
+              resume 'swaymsg "output * dpms on"' \
+         before-sleep 'swaylock -f -c 000000 -i $lock_bg'
+
+# Define outputs
+set $output-primary eDP-1
+set $output-secondary DP-5
+workspace 1 output $output-secondary
+workspace 2 output $output-secondary
+workspace 3 output $output-secondary
+workspace 4 output $output-secondary
+
+
+workspace 5 output $output-primary
+workspace 6 output $output-primary
+workspace 7 output $output-primary
+workspace 8 output $output-primary
+
+workspace 1
+exec $term
+workspace 2
+exec firefox
